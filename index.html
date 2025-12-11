@@ -1,1 +1,399 @@
-<h1>Hello! This website is still a WIP.</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VanillaSMP Store - Official Minecraft Server Shop</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-section">
+                <img src="logo.png" alt="VanillaSMP Logo" class="logo" id="serverLogo">
+                <div class="server-info">
+                    <div class="server-name">VANILLASMP STORE</div>
+                    <div class="server-ip">vanillasmp.org</div>
+                </div>
+            </div>
+            <nav class="nav">
+                <button class="nav-btn active" onclick="showPage('home')">🏠 Home</button>
+                <button class="nav-btn" onclick="showPage('ranks')">👑 Ranks</button>
+                <button class="nav-btn" onclick="showPage('keys')">🔑 Keys</button>
+                <button class="nav-btn" onclick="showPage('upgrades')">⬆️ Upgrades</button>
+                <button class="nav-btn" onclick="showPage('bundles')">📦 Bundles</button>
+                <button class="nav-btn" onclick="showPage('gems')">💎 Gems</button>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- HOME PAGE -->
+        <div id="home" class="page active">
+            <div class="welcome-section">
+                <h1>Welcome to the VanillaSMP Webstore!</h1>
+                <p>Welcome to the official VanillaSMP Store. To begin shopping, please select a category above. Please note that ranks are a 1 time payment and are unlocked permanently!</p>
+            </div>
+
+            <div class="info-box">
+                <h3>SUPPORT</h3>
+                <p>Need any questions answered before checkout? Waited more than 20 minutes but your package still has not arrived? Ask the community/staff on Discord, or for payment support, shoot us an email: vanillasmpmc@gmail.com</p>
+            </div>
+
+            <div class="info-box">
+                <h3>REFUND POLICY</h3>
+                <p>All payments are final and non-refundable. Attempting a chargeback or opening a PayPal dispute will result in <strong>permanent</strong> and irreversible <strong>banishment</strong> from all of our servers, and other Minecraft stores.</p>
+                <p style="margin-top: 10px;">It could take between 1-20 minutes for your purchase to be credited in-game. If you're still not credited, please open a support ticket on our discord with proof of purchase and we will look into your issue.</p>
+            </div>
+        </div>
+
+        <!-- RANKS PAGE -->
+        <div id="ranks" class="page">
+            <h2 class="section-title">Server Ranks</h2>
+            <div class="products-grid">
+                <div class="product-card">
+                    <div class="product-header">
+                        <div class="product-name">Core</div>
+                        <div class="product-price">$4.00</div>
+                    </div>
+                    <ul class="product-benefits">
+                        <li>/hat</li>
+                        <li>/craft</li>
+                        <li>/feed</li>
+                        <li>Colored chat</li>
+                        <li>/sethome 2</li>
+                        <li>1 Small Crate Key monthly</li>
+                        <li>Iron Armor Set</li>
+                    </ul>
+                    <button class="buy-btn" onclick="buyProduct(4)">Purchase Core</button>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-header">
+                        <div class="product-name">Pro</div>
+                        <div class="product-price">$8.00</div>
+                    </div>
+                    <ul class="product-benefits">
+                        <li>Everything in Core</li>
+                        <li>/anvil</li>
+                        <li>/enderchest</li>
+                        <li>/heal (cooldown)</li>
+                        <li>/sethome 4</li>
+                        <li>1 Medium Crate Key monthly</li>
+                        <li>Prot I Iron Armor</li>
+                    </ul>
+                    <button class="buy-btn" onclick="buyProduct(8)">Purchase Pro</button>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-header">
+                        <div class="product-name">Master</div>
+                        <div class="product-price">$15.00</div>
+                    </div>
+                    <ul class="product-benefits">
+                        <li>Everything in Pro</li>
+                        <li>/repair</li>
+                        <li>/nick</li>
+                        <li>Fly in spawn</li>
+                        <li>/sethome 6</li>
+                        <li>2 Master Keys monthly</li>
+                        <li>Prot II Iron + Diamond Tools</li>
+                    </ul>
+                    <button class="buy-btn" onclick="buyProduct(15)">Purchase Master</button>
+                </div>
+
+                <div class="product-card">
+                    <div class="op-badge">OP RANK</div>
+                    <div class="product-header">
+                        <div class="product-name">Vanilla</div>
+                        <div class="product-price">$20.00</div>
+                    </div>
+                    <ul class="product-benefits">
+                        <li>Everything in Master</li>
+                        <li><strong>FULL GOD NETHERITE ARMOR</strong></li>
+                        <li>Protection IV, Unbreaking III, Mending, Thorns III</li>
+                        <li><strong>FULL GOD NETHERITE TOOLS</strong></li>
+                        <li>Efficiency V, Unbreaking III, Mending</li>
+                        <li>Fortune III + Silk Touch Pickaxe</li>
+                        <li>God Bow (Power V, Punch II, Flame, Infinity)</li>
+                        <li>/fly, /heal (60s cooldown), /ec, /repair</li>
+                        <li>/hat, /craft, /near, /nick</li>
+                        <li>/sethome 15</li>
+                        <li>Custom name color</li>
+                        <li>5 Vanilla Keys monthly</li>
+                        <li>$5,000,000 monthly</li>
+                    </ul>
+                    <button class="buy-btn" onclick="buyProduct(20)">Purchase Vanilla</button>
+                </div>
+
+                <div class="product-card">
+                    <div class="op-badge">INSANELY OP</div>
+                    <div class="product-header">
+                        <div class="product-name">Vanilla+</div>
+                        <div class="product-price">$30.00</div>
+                    </div>
+                    <ul class="product-benefits">
+                        <li>Everything in Vanilla</li>
+                        <li><strong>ULTRA-GOD NETHERITE ARMOR</strong></li>
+                        <li>Protection VIII, Unbreaking X, Thorns V, Mending</li>
+                        <li><strong>ULTRA-GOD TOOLS</strong></li>
+                        <li>Efficiency X, Sharpness X, Unbreaking X</li>
+                        <li>Fortune V, Looting V</li>
+                        <li>Ultra-God Bow (Power X, Punch V, Infinity)</li>
+                        <li>/god, /fix all, /heal (no cooldown)</li>
+                        <li>/flyspeed 5, /walkspeed 5</li>
+                        <li>/backpack 27 slots</li>
+                        <li>/rtp unlimited, /sethome unlimited</li>
+                        <li>/disguise, /pv 1–6</li>
+                        <li>Fly-in-combat bypass</li>
+                        <li>10 Vanilla+ Keys monthly</li>
+                        <li>$20,000,000 monthly</li>
+                        <li>1 monthly Ultra-God Item</li>
+                    </ul>
+                    <button class="buy-btn" onclick="buyProduct(30)">Purchase Vanilla+</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- KEYS PAGE -->
+        <div id="keys" class="page">
+            <h2 class="section-title">Crate Keys</h2>
+            <div class="products-grid">
+                <div class="product-card">
+                    <div class="product-header">
+                        <div class="product-name">Small Key</div>
+                        <div class="product-price">$1.50</div>
+                    </div>
+                    <ul class="product-benefits">
+                        <li>Chance at iron gear</li>
+                        <li>Small rewards</li>
+                        <li>Money reward: $100k–$500k</li>
+                    </ul>
+                    <button class="buy-btn" onclick="buyProduct(1.50)">Purchase Small Key</button>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-header">
+                        <div class="product-name">Medium Key</div>
+                        <div class="product-price">$3.00</div>
+                    </div>
+                    <ul class="product-benefits">
+                        <li>Good tools and spawners</li>
+                        <li>Money reward: $250k–$2m</li>
+                    </ul>
+                    <button class="buy-btn" onclick="buyProduct(3)">Purchase Medium Key</button>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-header">
+                        <div class="product-name">Master Key</div>
+                        <div class="product-price">$5.00</div>
+                    </div>
+                    <ul class="product-benefits">
+                        <li>Netherite items</li>
+                        <li>Rare enchants</li>
+                        <li>Money reward: $1m–$5m</li>
+                    </ul>
+                    <button class="buy-btn" onclick="buyProduct(5)">Purchase Master Key</button>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-header">
+                        <div class="product-name">Vanilla Key</div>
+                        <div class="product-price">$10.00</div>
+                    </div>
+                    <ul class="product-benefits">
+                        <li>God gear and elytras</li>
+                        <li>Cosmetics</li>
+                        <li>Money reward: $5m–$15m</li>
+                    </ul>
+                    <button class="buy-btn" onclick="buyProduct(10)">Purchase Vanilla Key</button>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-header">
+                        <div class="product-name">Vanilla+ Key</div>
+                        <div class="product-price">$15.00</div>
+                    </div>
+                    <ul class="product-benefits">
+                        <li>Ultra-god gear</li>
+                        <li>Disguises and pets</li>
+                        <li>Money reward: $10m–$50m</li>
+                    </ul>
+                    <button class="buy-btn" onclick="buyProduct(15)">Purchase Vanilla+ Key</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- RANK UPGRADES PAGE -->
+        <div id="upgrades" class="page">
+            <h2 class="section-title">Rank Upgrades</h2>
+            <div class="products-grid">
+                <div class="product-card">
+                    <div class="product-header">
+                        <div class="product-name">Core → Pro</div>
+                        <div class="product-price">$4.00</div>
+                    </div>
+                    <ul class="product-benefits">
+                        <li>Upgrade from Core to Pro rank</li>
+                        <li>Unlock all Pro benefits</li>
+                    </ul>
+                    <button class="buy-btn" onclick="buyProduct(4)">Purchase Upgrade</button>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-header">
+                        <div class="product-name">Pro → Master</div>
+                        <div class="product-price">$7.00</div>
+                    </div>
+                    <ul class="product-benefits">
+                        <li>Upgrade from Pro to Master rank</li>
+                        <li>Unlock all Master benefits</li>
+                    </ul>
+                    <button class="buy-btn" onclick="buyProduct(7)">Purchase Upgrade</button>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-header">
+                        <div class="product-name">Master → Vanilla</div>
+                        <div class="product-price">$5.00</div>
+                    </div>
+                    <ul class="product-benefits">
+                        <li>Upgrade from Master to Vanilla rank</li>
+                        <li>Unlock all Vanilla benefits</li>
+                        <li>Get god gear!</li>
+                    </ul>
+                    <button class="buy-btn" onclick="buyProduct(5)">Purchase Upgrade</button>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-header">
+                        <div class="product-name">Vanilla → Vanilla+</div>
+                        <div class="product-price">$10.00</div>
+                    </div>
+                    <ul class="product-benefits">
+                        <li>Upgrade from Vanilla to Vanilla+ rank</li>
+                        <li>Unlock all Vanilla+ benefits</li>
+                        <li>Get ultra-god gear!</li>
+                    </ul>
+                    <button class="buy-btn" onclick="buyProduct(10)">Purchase Upgrade</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- BUNDLES PAGE -->
+        <div id="bundles" class="page">
+            <h2 class="section-title">Special Bundles</h2>
+            <div class="products-grid">
+                <div class="product-card">
+                    <div class="product-header">
+                        <div class="product-name">Starter Bundle</div>
+                        <div class="product-price">$10.00</div>
+                    </div>
+                    <ul class="product-benefits">
+                        <li>3 Small Keys</li>
+                        <li>1 Medium Key</li>
+                        <li>$2,000,000 money</li>
+                    </ul>
+                    <button class="buy-btn" onclick="buyProduct(10)">Purchase Bundle</button>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-header">
+                        <div class="product-name">Vanilla Power Bundle</div>
+                        <div class="product-price">$25.00</div>
+                    </div>
+                    <ul class="product-benefits">
+                        <li>1 Vanilla Key</li>
+                        <li>5 Small Keys</li>
+                        <li>1 Master Key</li>
+                        <li>$10,000,000 money</li>
+                    </ul>
+                    <button class="buy-btn" onclick="buyProduct(25)">Purchase Bundle</button>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-header">
+                        <div class="product-name">Vanilla+ Extreme Bundle</div>
+                        <div class="product-price">$40.00</div>
+                    </div>
+                    <ul class="product-benefits">
+                        <li>2 Vanilla+ Keys</li>
+                        <li>5 Medium Keys</li>
+                        <li>15 Small Keys</li>
+                        <li>$20,000,000 money</li>
+                    </ul>
+                    <button class="buy-btn" onclick="buyProduct(40)">Purchase Bundle</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- GEMS PAGE -->
+        <div id="gems" class="page">
+            <h2 class="section-title">Premium Gems</h2>
+            <div class="info-box" style="margin-bottom: 30px;">
+                <h3>About Gems</h3>
+                <p>Gems are our premium currency that can be used for pets, cosmetics, tags, effects, and future shop items. Purchase gems to unlock exclusive content!</p>
+            </div>
+            <div class="products-grid">
+                <div class="product-card">
+                    <div class="product-header">
+                        <div class="product-name">500 Gems</div>
+                        <div class="product-price">$5.00</div>
+                    </div>
+                    <ul class="product-benefits">
+                        <li>500 Premium Gems</li>
+                        <li>Perfect starter pack</li>
+                    </ul>
+                    <button class="buy-btn" onclick="buyProduct(5)">Purchase Gems</button>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-header">
+                        <div class="product-name">1,200 Gems</div>
+                        <div class="product-price">$10.00</div>
+                    </div>
+                    <ul class="product-benefits">
+                        <li>1,200 Premium Gems</li>
+                        <li>20% bonus gems!</li>
+                    </ul>
+                    <button class="buy-btn" onclick="buyProduct(10)">Purchase Gems</button>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-header">
+                        <div class="product-name">2,600 Gems</div>
+                        <div class="product-price">$20.00</div>
+                    </div>
+                    <ul class="product-benefits">
+                        <li>2,600 Premium Gems</li>
+                        <li>30% bonus gems!</li>
+                    </ul>
+                    <button class="buy-btn" onclick="buyProduct(20)">Purchase Gems</button>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-header">
+                        <div class="product-name">6,000 Gems</div>
+                        <div class="product-price">$40.00</div>
+                    </div>
+                    <ul class="product-benefits">
+                        <li>6,000 Premium Gems</li>
+                        <li>50% bonus gems!</li>
+                        <li>Best value!</li>
+                    </ul>
+                    <button class="buy-btn" onclick="buyProduct(40)">Purchase Gems</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 VanillaSMP. All rights reserved.</p>
+        <p>vanillasmp.org</p>
+        <p>All purchases are final and non-refundable.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
