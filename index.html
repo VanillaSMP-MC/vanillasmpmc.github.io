@@ -169,7 +169,6 @@
   <header class="topbar" role="banner">
     <div class="topbar-inner">
       <div class="brand-left">
-        <!-- Put your logo at ./logo.png -->
         <img src="./logo.png" alt="VanillaSMP Logo" class="logo-small" />
         <div class="brand-title">
           <div class="domain">vanillasmp.org</div>
@@ -220,7 +219,6 @@
     </aside>
 
     <main class="content" id="pages">
-      <!-- HOME -->
       <section id="home" class="card page active">
         <div class="hero">
           <div class="hero-left">
@@ -245,7 +243,6 @@
         </div>
       </section>
 
-      <!-- RANKS -->
       <section id="ranks" class="card page" style="display:none">
         <header style="display:flex;justify-content:space-between;align-items:center">
           <div>
@@ -255,7 +252,6 @@
         </header>
 
         <div class="products-grid" aria-live="polite" style="margin-top:14px">
-          <!-- Core $4.00 -->
           <article class="product" aria-labelledby="core-title">
             <div class="head">
               <div id="core-title" class="title">Core</div>
@@ -272,11 +268,10 @@
             </ul>
             <div class="buy-row">
               <div class="info-small">Permanent rank</div>
-              <button class="buy-btn" onclick="buyProduct(4)">Purchase</button>
+              <button class="buy-btn" onclick="buyProduct(4, 'Core Rank')">Purchase</button>
             </div>
           </article>
 
-          <!-- Pro $8.00 -->
           <article class="product" aria-labelledby="pro-title">
             <div class="head">
               <div id="pro-title" class="title">Pro</div>
@@ -293,11 +288,10 @@
             </ul>
             <div class="buy-row">
               <div class="info-small">Permanent rank</div>
-              <button class="buy-btn" onclick="buyProduct(8)">Purchase</button>
+              <button class="buy-btn" onclick="buyProduct(8, 'Pro Rank')">Purchase</button>
             </div>
           </article>
 
-          <!-- Master $15 -->
           <article class="product" aria-labelledby="master-title">
             <div class="badge">POPULAR</div>
             <div class="head">
@@ -315,11 +309,10 @@
             </ul>
             <div class="buy-row">
               <div class="info-small">Permanent rank</div>
-              <button class="buy-btn" onclick="buyProduct(15)">Purchase</button>
+              <button class="buy-btn" onclick="buyProduct(15, 'Master Rank')">Purchase</button>
             </div>
           </article>
 
-          <!-- Vanilla $20 (OP Rank) -->
           <article class="product" aria-labelledby="vanilla-title">
             <div class="badge">OP</div>
             <div class="head">
@@ -346,11 +339,10 @@
             </ul>
             <div class="buy-row">
               <div class="info-small">Permanent rank / Monthly perks</div>
-              <button class="buy-btn" onclick="buyProduct(20)">Purchase</button>
+              <button class="buy-btn" onclick="buyProduct(20, 'Vanilla Rank')">Purchase</button>
             </div>
           </article>
 
-          <!-- Vanilla+ $30 -->
           <article class="product" aria-labelledby="vanillaplus-title">
             <div class="badge">INSANE</div>
             <div class="head">
@@ -379,13 +371,12 @@
             </ul>
             <div class="buy-row">
               <div class="info-small">Permanent rank / Monthly perks</div>
-              <button class="buy-btn" onclick="buyProduct(30)">Purchase</button>
+              <button class="buy-btn" onclick="buyProduct(30, 'Vanilla+ Rank')">Purchase</button>
             </div>
           </article>
         </div>
       </section>
 
-      <!-- KEYS -->
       <section id="keys" class="card page" style="display:none">
         <header>
           <h2 style="color:var(--accent-1)">🔑 Keys</h2>
@@ -404,7 +395,7 @@
             </ul>
             <div class="buy-row">
               <div class="info-small">Single key</div>
-              <button class="buy-btn" onclick="buyProduct(1.5)">Purchase</button>
+              <button class="buy-btn" onclick="buyProduct(1.5, 'Small Key')">Purchase</button>
             </div>
           </article>
 
@@ -419,7 +410,7 @@
             </ul>
             <div class="buy-row">
               <div class="info-small">Single key</div>
-              <button class="buy-btn" onclick="buyProduct(3)">Purchase</button>
+              <button class="buy-btn" onclick="buyProduct(3, 'Medium Key')">Purchase</button>
             </div>
           </article>
 
@@ -434,7 +425,7 @@
             </ul>
             <div class="buy-row">
               <div class="info-small">Single key</div>
-              <button class="buy-btn" onclick="buyProduct(5)">Purchase</button>
+              <button class="buy-btn" onclick="buyProduct(5, 'Master Key')">Purchase</button>
             </div>
           </article>
 
@@ -449,7 +440,7 @@
             </ul>
             <div class="buy-row">
               <div class="info-small">Single key</div>
-              <button class="buy-btn" onclick="buyProduct(10)">Purchase</button>
+              <button class="buy-btn" onclick="buyProduct(10, 'Vanilla Key')">Purchase</button>
             </div>
           </article>
 
@@ -464,13 +455,12 @@
             </ul>
             <div class="buy-row">
               <div class="info-small">Single key</div>
-              <button class="buy-btn" onclick="buyProduct(15)">Purchase</button>
+              <button class="buy-btn" onclick="buyProduct(15, 'Vanilla+ Key')">Purchase</button>
             </div>
           </article>
         </div>
       </section>
 
-      <!-- UPGRADES -->
       <section id="upgrades" class="card page" style="display:none">
         <header>
           <h2 style="color:var(--accent-1)">⬆️ Rank Upgrades</h2>
@@ -488,7 +478,7 @@
             </ul>
             <div class="buy-row">
               <div class="info-small">One-time upgrade</div>
-              <button class="buy-btn" onclick="buyProduct(4)">Purchase Upgrade</button>
+              <button class="buy-btn" onclick="buyProduct(4, 'Core -> Pro Upgrade')">Purchase Upgrade</button>
             </div>
           </article>
 
@@ -502,7 +492,7 @@
             </ul>
             <div class="buy-row">
               <div class="info-small">One-time upgrade</div>
-              <button class="buy-btn" onclick="buyProduct(7)">Purchase Upgrade</button>
+              <button class="buy-btn" onclick="buyProduct(7, 'Pro -> Master Upgrade')">Purchase Upgrade</button>
             </div>
           </article>
 
@@ -516,7 +506,7 @@
             </ul>
             <div class="buy-row">
               <div class="info-small">One-time upgrade</div>
-              <button class="buy-btn" onclick="buyProduct(5)">Purchase Upgrade</button>
+              <button class="buy-btn" onclick="buyProduct(5, 'Master -> Vanilla Upgrade')">Purchase Upgrade</button>
             </div>
           </article>
 
@@ -530,13 +520,12 @@
             </ul>
             <div class="buy-row">
               <div class="info-small">One-time upgrade</div>
-              <button class="buy-btn" onclick="buyProduct(10)">Purchase Upgrade</button>
+              <button class="buy-btn" onclick="buyProduct(10, 'Vanilla -> Vanilla+ Upgrade')">Purchase Upgrade</button>
             </div>
           </article>
         </div>
       </section>
 
-      <!-- BUNDLES -->
       <section id="bundles" class="card page" style="display:none">
         <header>
           <h2 style="color:var(--accent-1)">🎁 Bundles</h2>
@@ -556,7 +545,7 @@
             </ul>
             <div class="buy-row">
               <div class="info-small">Good for new players</div>
-              <button class="buy-btn" onclick="buyProduct(10)">Purchase</button>
+              <button class="buy-btn" onclick="buyProduct(10, 'Starter Bundle')">Purchase</button>
             </div>
           </article>
 
@@ -573,7 +562,7 @@
             </ul>
             <div class="buy-row">
               <div class="info-small">High value</div>
-              <button class="buy-btn" onclick="buyProduct(25)">Purchase</button>
+              <button class="buy-btn" onclick="buyProduct(25, 'Vanilla Power Bundle')">Purchase</button>
             </div>
           </article>
 
@@ -590,13 +579,12 @@
             </ul>
             <div class="buy-row">
               <div class="info-small">Top tier bundle</div>
-              <button class="buy-btn" onclick="buyProduct(40)">Purchase</button>
+              <button class="buy-btn" onclick="buyProduct(40, 'Vanilla+ Extreme Bundle')">Purchase</button>
             </div>
           </article>
         </div>
       </section>
 
-      <!-- GEMS -->
       <section id="gems" class="card page" style="display:none">
         <header>
           <h2 style="color:var(--accent-1)">💎 Gems</h2>
@@ -614,7 +602,7 @@
             </ul>
             <div class="buy-row">
               <div class="info-small">Instant credit in-game</div>
-              <button class="buy-btn" onclick="buyProduct(5)">Purchase</button>
+              <button class="buy-btn" onclick="buyProduct(5, '500 Gems')">Purchase</button>
             </div>
           </article>
 
@@ -628,7 +616,7 @@
             </ul>
             <div class="buy-row">
               <div class="info-small">Best seller</div>
-              <button class="buy-btn" onclick="buyProduct(10)">Purchase</button>
+              <button class="buy-btn" onclick="buyProduct(10, '1200 Gems')">Purchase</button>
             </div>
           </article>
 
@@ -642,7 +630,7 @@
             </ul>
             <div class="buy-row">
               <div class="info-small">Great value</div>
-              <button class="buy-btn" onclick="buyProduct(20)">Purchase</button>
+              <button class="buy-btn" onclick="buyProduct(20, '2600 Gems')">Purchase</button>
             </div>
           </article>
 
@@ -656,7 +644,7 @@
             </ul>
             <div class="buy-row">
               <div class="info-small">Premium pack</div>
-              <button class="buy-btn" onclick="buyProduct(40)">Purchase</button>
+              <button class="buy-btn" onclick="buyProduct(40, '6000 Gems')">Purchase</button>
             </div>
           </article>
         </div>
@@ -672,6 +660,9 @@
   </footer>
 
   <script>
+    // --- Configuration ---
+    const WEBHOOK_URL = 'https://store-webhook-proxy.clipsofstreamers0-1.workers.dev/';
+
     // Set current year
     document.getElementById('year').textContent = new Date().getFullYear();
 
@@ -689,27 +680,85 @@
       // smooth scroll to top of content on mobile
       if(window.innerWidth < 980) window.scrollTo({top: 0, behavior: 'smooth'});
     }
+    
+    // Attempt to retrieve and pre-fill the last used username
+    function getLastUsername() {
+        return localStorage.getItem('lastMinecraftUsername') || '';
+    }
+    
+    function setLastUsername(username) {
+        localStorage.setItem('lastMinecraftUsername', username);
+    }
+    
+    // Buy function: sends request to Cloudflare Worker to generate PayPal link
+    async function buyProduct(amount, product_name){
+      // 1. Get Minecraft Username
+      let username = prompt(`Please enter your Minecraft Username to purchase "${product_name}":`, getLastUsername());
 
-    // Buy function: opens PayPal.me link with amount
-    // Uses the PayPal.me username: VanillaSMPMC
-    function buyProduct(amount){
-      // Accept amounts as numbers (integers or floats)
-      // Normalize to 2 decimal places but remove trailing zeros for PayPal.me links:
+      if(!username) {
+        alert('Purchase cancelled. You must enter a Minecraft Username.');
+        return;
+      }
+      
+      // Basic validation (e.g., must be 3-16 characters)
+      username = username.trim();
+      if (username.length < 3 || username.length > 16 || !/^[a-zA-Z0-9_]+$/.test(username)) {
+        alert('Invalid Minecraft Username. Must be 3-16 characters long and contain only letters, numbers, and underscores.');
+        return;
+      }
+
+      // Store username for next time
+      setLastUsername(username);
+
+      // Normalize amount for the backend
       const amt = Number(amount);
       if(Number.isNaN(amt) || amt <= 0){
         alert('Invalid price');
         return;
       }
-      // Format to trimmed decimal (PayPal accepts 4 or 4.5 or 4.00)
-      let formatted = amt.toFixed(2);
-      // Remove trailing .00 or .50 formatting simplification if desired
-      // But keep two decimals for clarity: use trimmed version (e.g., 1.50 -> 1.5, 4.00->4)
-      formatted = formatted.replace(/\.00$/, '');
-      formatted = formatted.replace(/\.?0$/, function(m){ return m; }); // noop: ensures consistency
+      const formatted_amount = amt.toFixed(2); // Always two decimal places for the API
 
-      // Compose PayPal.me URL
-      const url = `https://paypal.me/VanillaSMPMC/${encodeURIComponent(formatted)}`;
-      window.open(url, '_blank', 'noopener');
+      // 2. Prepare and Send Request to Cloudflare Worker
+      const purchaseDetails = {
+        amount: formatted_amount,
+        product_name: product_name,
+        username: username,
+      };
+
+      console.log('Sending purchase request:', purchaseDetails);
+      
+      try {
+        const response = await fetch(WEBHOOK_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            // IMPORTANT: Add a unique header or secret if your Cloudflare Worker requires it for security
+            // 'X-Webstore-Secret': 'YOUR_SECRET_KEY' 
+          },
+          body: JSON.stringify(purchaseDetails),
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error('Webhook error response:', errorText);
+          alert(`Could not complete purchase. Server error: ${response.status} - ${errorText.substring(0, 100)}...`);
+          return;
+        }
+
+        const data = await response.json();
+        
+        if (data.status === 'success' && data.paypal_url) {
+          // 3. Open the generated PayPal URL for checkout
+          window.open(data.paypal_url, '_blank', 'noopener');
+        } else {
+          console.error('Invalid response from webhook:', data);
+          alert('Could not process payment link. Invalid response from the server.');
+        }
+
+      } catch (error) {
+        console.error('Fetch error:', error);
+        alert('A connection error occurred. Please try again or contact support.');
+      }
     }
 
     // Accessibility: keyboard nav
@@ -719,12 +768,8 @@
       if(e.key === '3') document.querySelector('[data-target="keys"]').click();
     });
 
-function addToCart(name, price) {
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
-    cart.push({ name, price });
-    localStorage.setItem("cart", JSON.stringify(cart));
-    alert("Added to cart!");
-}
+    // The 'addToCart' function from your original script is now redundant as we directly initiate checkout.
+    // I've removed it for simplicity, but you can re-add cart logic if needed.
 
   </script>
 </body>
