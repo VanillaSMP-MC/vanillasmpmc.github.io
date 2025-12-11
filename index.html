@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VanillaSMP Store</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #4a3c28 0%, #2d2416 100%);
+            background-attachment: fixed;
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        .top-bar {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 15px 0;
+            border-bottom: 2px solid #d4a574;
+        }
+
+        .top-bar-content {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 0 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .guest-badge {
+            background: linear-gradient(135deg, #d4a574 0%, #b8915f 100%);
+            padding: 10px 20px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+        }
+
+        .player-head {
+            width: 40px;
+            height: 40px;
+            border-radius: 5px;
+        }
+
+        .guest-name {
+            font-weight: bold;
+            color: #2d2416;
+        }
+
+        .click-login {
+            font-size: 12px;
+            color: #3d3020;
+        }
+
+        .server-status {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .play-button {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #f4c33f 0%, #d4a524 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: #2d2416;
+        }
+
+        .server-domain {
+            font-size: 18px;
+            font-weight: bold;
+            color: #d4a574;
+        }
+
+        .players-online {
+            font-size: 12px;
+            color: #aaa;
+        }
+
+        .main-container {
+            display: flex;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .sidebar {
+            width: 300px;
+            background: rgba(44, 24, 16, 0.9);
+            padding: 30px 20px;
+            border-right: 2px solid #d4a574;
+            min-height: calc(100vh - 80px);
+        }
+
+        .main-logo {
+            max-width: 250px;
+            width: 100%;
+            display: block;
+            margin: 0 auto 30px;
+        }
+
+        .sidebar-title {
+            color: #d4a574;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .sidebar-btn {
+            background: rgba(212, 165, 116, 0.1);
+            border: 2px solid transparent;
+            padding: 15px 20px;
+            border-radius: 10px;
+            color: #d4a574;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+            width: 100%;
+            transition: all 0.3s;
+        }
+
+        .sidebar-btn:hover {
+            background: rgba(212, 165, 116, 0.2);
+            border-color: #d4a574;
+        }
+
+        .sidebar-btn.active {
+            background: rgba(212, 165, 116, 0.3);
+            border-color: #d4a574;
+        }
+
+        .content-area {
+            flex: 1;
+            padding: 40px;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .page-header {
+            background: linear-gradient(135deg, #f4c33f 0%, #d4a524 100%);
+            padding: 20px 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .page-header h2 {
+            color: #2d2416;
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .page-header p {
+            color: #3d3020;
+            font-size: 14px;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .product-card {
+            background: rgba(212, 165, 116, 0.15);
+            border: 2px solid #d4a574;
+            border-radius: 12px;
+            padding: 25px;
+            position: relative;
+        }
+
+        .product-icon {
+            font-size: 80px;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .product-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #d4a574;
+        }
+
+        .product-name {
+            font-size: 24px;
+            font-weight: bold;
+            color: #d4a574;
+        }
+
+        .product-price {
+            font-size: 28px;
+            font-weight: bold;
+            color: #f4c594;
+        }
+
+        .product-benefits {
+            list-style: none;
+            margin: 20px 0;
+        }
+
+        .product-benefits li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+            color: #ddd;
+        }
+
+        .product-benefits li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #d4a574;
+        }
+
+        .buy-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #d4a574 0%, #8b6f47 100%);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .op-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: #fff;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            z-index: 10;
+        }
+
+        .welcome-section, .info-box {
+            background: rgba(212, 165, 116, 0.1);
+            border: 2px solid #d4a574;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .info-box h3 {
+            color: #d4a574;
+            margin-bottom: 15px;
+        }
+
+        footer {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 30px;
+            text-align: center;
+            border-top: 2px solid #d4a574;
+            color: #aaa;
+        }
+
+        @media (max-width: 1024px) {
+            .main-container {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <div class="top-bar-content">
+            <div class="player-info">
+                <div class="guest-badge" onclick="alert('Login feature - enter username')">
+                    <img src="https://crafatar.com/avatars/8667ba71b85a4004af54457a9734eed7" alt="Guest" class="player-head">
+                    <div>
+                        <div class="guest-name">Guest's Bag</div>
+                        <div class="click-login">click to login</div>
+                    </div>
+                </div>
+            </div>
+            <div class="server-status">
+                <div class="play-button">▶</div>
+                <div>
+                    <div class="server-domain">vanillasmp.org</div>
+                    <div class="players-online">Players Online</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <aside class="sidebar">
+            <img src="./logo.png" alt="VanillaSMP" class="main-logo">
+            <div class="sidebar-title">START SHOPPING</div>
+            <button class="sidebar-btn active" onclick="showPage('home')">
+                <span>🌍</span> Home
+            </button>
+            <button class="sidebar-btn" onclick="showPage('ranks')">
+                <span>👑</span> Ranks
+            </button>
+            <button class="sidebar-btn" onclick="showPage('keys')">
+                <span>🔑</span> Keys
+            </button>
+            <button class="sidebar-btn" onclick="showPage('upgrades')">
+                <span>📦</span> Upgrades
+            </button>
+            <button class="sidebar-btn" onclick="showPage('bundles')">
+                <span>🎁</span> Bundles
+            </button>
+            <button class="sidebar-btn" onclick="showPage('gems')">
+                <span>💎</span> Gems
+            </button>
+        </aside>
+
+        <main class="content-area">
+            <div id="home" class="page active">
+                <div class="welcome-section">
+                    <h2>Welcome to the VanillaSMP Webstore!</h2>
+                    <p>Welcome to the official VanillaSMP Store. To begin shopping, please select a category to your left.</p>
+                </div>
+                <div class="info-box">
+                    <h3>SUPPORT</h3>
+                    <p>Need help? Email: vanillasmpmc@gmail.com</p>
+                </div>
+                <div class="info-box">
+                    <h3>REFUND POLICY</h3>
+                    <p>All payments are final and non-refundable.</p>
+                </div>
+            </div>
+
+            <div id="ranks" class="page">
+                <div class="page-header">
+                    <h2>👑 Ranks</h2>
+                    <p>Here You can buy ranks for the VanillaSMP Server!</p>
+                </div>
+                <div class="products-grid">
+                    <div class="product-card">
+                        <div class="product-icon">⚔️</div>
+                        <div class="product-header">
+                            <div class="product-name">Core</div>
+                            <div class="product-price">$4.00</div>
+                        </div>
+                        <ul class="product-benefits">
+                            <li>/hat</li>
+                            <li>/craft</li>
+                            <li>/feed</li>
+                        </ul>
+                        <button class="buy-btn" onclick="buyProduct(4)">Purchase</button>
+                    </div>
+                    <div class="product-card">
+                        <div class="product-icon">🛡️</div>
+                        <div class="product-header">
+                            <div class="product-name">Pro</div>
+                            <div class="product-price">$8.00</div>
+                        </div>
+                        <ul class="product-benefits">
+                            <li>Everything in Core</li>
+                            <li>/anvil</li>
+                            <li>/heal</li>
+                        </ul>
+                        <button class="buy-btn" onclick="buyProduct(8)">Purchase</button>
+                    </div>
+                    <div class="product-card">
+                        <div class="op-badge">OP RANK</div>
+                        <div class="product-icon">👑</div>
+                        <div class="product-header">
+                            <div class="product-name">Vanilla</div>
+                            <div class="product-price">$20.00</div>
+                        </div>
+                        <ul class="product-benefits">
+                            <li>Full God Netherite</li>
+                            <li>/fly</li>
+                            <li>$5M monthly</li>
+                        </ul>
+                        <button class="buy-btn" onclick="buyProduct(20)">Purchase</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="keys" class="page">
+                <div class="page-header">
+                    <h2>🔑 Keys</h2>
+                    <p>Here You can buy keys for the VanillaSMP Server!</p>
+                </div>
+                <div class="products-grid">
+                    <div class="product-card">
+                        <div class="product-icon">🔑</div>
+                        <div class="product-header">
+                            <div class="product-name">Small Key</div>
+                            <div class="product-price">$1.50</div>
+                        </div>
+                        <button class="buy-btn" onclick="buyProduct(1.50)">Purchase</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="upgrades" class="page">
+                <div class="page-header">
+                    <h2>📦 Rank Upgrades</h2>
+                    <p>Upgrade your rank!</p>
+                </div>
+            </div>
+
+            <div id="bundles" class="page">
+                <div class="page-header">
+                    <h2>🎁 Bundles</h2>
+                    <p>Special bundle deals!</p>
+                </div>
+            </div>
+
+            <div id="gems" class="page">
+                <div class="page-header">
+                    <h2>💎 Gems</h2>
+                    <p>Buy premium gems!</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 VanillaSMP. All rights reserved.</p>
+        <p>vanillasmp.org</p>
+    </footer>
+
+    <script>
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.sidebar-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function buyProduct(price) {
+            window.open(`https://paypal.me/VanillaSMPMC/${price}`, '_blank');
+        }
+    </script>
+</body>
+</html>
