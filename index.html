@@ -706,10 +706,11 @@
         localStorage.setItem('lastMinecraftUsername', username);
     }
 
-    // Function to get the avatar URL from Crafatar
-    function getAvatarUrl(username) {
-        return `https://crafatar.com/avatars/${username}?size=36&overlay`;
-    }
+    // Function to get the avatar URL using Minotar
+function getAvatarUrl(username) {
+    // Minotar format: /avatar/{username}/{size}.png
+    return `https://minotar.net/avatar/${username}/36.png`;
+}
 
     // Function to update the display badge with the user's details
     function updateBadge(username) {
