@@ -7,8 +7,10 @@
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: linear-gradient(135deg, #4a3c28 0%, #2d2416 100%);
+    background-attachment: fixed;
     color: #fff;
     min-height: 100vh;
+    overflow-x: hidden;
 }
 
 /* Top Bar */
@@ -16,6 +18,11 @@ body {
     background: rgba(0, 0, 0, 0.6);
     padding: 15px 0;
     border-bottom: 2px solid #d4a574;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
 }
 
 .top-bar-content {
@@ -25,6 +32,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 20px;
 }
 
 .guest-badge {
@@ -136,14 +144,21 @@ body {
     max-width: 1600px;
     margin: 0 auto;
     min-height: calc(100vh - 200px);
+    padding-top: 90px;
 }
 
 /* Sidebar */
 .sidebar {
     width: 300px;
+    min-width: 300px;
     background: linear-gradient(180deg, rgba(44, 24, 16, 0.9) 0%, rgba(26, 15, 8, 0.9) 100%);
     padding: 30px 20px;
     border-right: 2px solid #d4a574;
+    position: sticky;
+    top: 90px;
+    height: fit-content;
+    max-height: calc(100vh - 110px);
+    overflow-y: auto;
 }
 
 .logo-container {
@@ -454,6 +469,8 @@ footer {
     padding: 30px 20px;
     text-align: center;
     border-top: 2px solid #d4a574;
+    margin-top: 60px;
+    clear: both;
 }
 
 footer p {
@@ -539,14 +556,25 @@ footer p {
 
 /* Responsive Design */
 @media (max-width: 1024px) {
+    .top-bar-content {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+    }
+
     .main-container {
         flex-direction: column;
+        padding-top: 120px;
     }
 
     .sidebar {
         width: 100%;
+        min-width: 100%;
         border-right: none;
         border-bottom: 2px solid #d4a574;
+        position: relative;
+        top: 0;
+        max-height: none;
     }
 
     .sidebar-nav {
@@ -565,10 +593,26 @@ footer p {
 }
 
 @media (max-width: 768px) {
+    .top-bar {
+        position: relative;
+    }
+
+    .main-container {
+        padding-top: 0;
+    }
+
     .top-bar-content {
         flex-wrap: wrap;
         gap: 15px;
         justify-content: center;
+    }
+
+    .guest-badge {
+        order: 1;
+    }
+
+    .server-status {
+        order: 2;
     }
 
     .products-grid {
@@ -581,5 +625,10 @@ footer p {
 
     .social-links, .view-stats {
         display: none;
+    }
+
+    .sidebar {
+        position: relative;
+        top: 0;
     }
 }
