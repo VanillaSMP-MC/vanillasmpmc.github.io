@@ -1,464 +1,723 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VanillaSMP Store</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>VanillaSMP Store</title>
+  <meta name="description" content="Official VanillaSMP Webstore" />
+  <style>
+    /* Basic reset */
+    *{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg-1:#2e2317;
+      --bg-2:#3d2d1f;
+      --accent-1:#d4a574;
+      --accent-2:#f4c33f;
+      --card:#3a2b1f;
+      --muted:#bfb2a1;
+      --text:#f6f2ef;
+      --glass: rgba(255,255,255,0.03);
+      --pay-blue: #0070ba;
+    }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #4a3c28 0%, #2d2416 100%);
-            background-attachment: fixed;
-            color: #fff;
-            min-height: 100vh;
-        }
+    html,body{height:100%}
+    body{
+      font-family: Inter, "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial;
+      background: linear-gradient(135deg,var(--bg-1) 0%, var(--bg-2) 100%);
+      color:var(--text);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.4;
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+    }
 
-        .top-bar {
-            background: rgba(0, 0, 0, 0.6);
-            padding: 15px 0;
-            border-bottom: 2px solid #d4a574;
-        }
+    /* Top bar */
+    .topbar{
+      width:100%;
+      background: linear-gradient(180deg, rgba(0,0,0,0.25), rgba(0,0,0,0.15));
+      border-bottom: 2px solid rgba(212,165,116,0.15);
+      padding:12px 20px;
+      display:flex;
+      justify-content:center;
+    }
+    .topbar-inner{
+      width:100%;
+      max-width:1400px;
+      display:flex;
+      align-items:center;
+      gap:16px;
+      justify-content:space-between;
+    }
 
-        .top-bar-content {
-            max-width: 1600px;
-            margin: 0 auto;
-            padding: 0 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
+    .brand-left{display:flex;align-items:center;gap:14px}
+    .logo-small{height:52px;width:52px;object-fit:contain;border-radius:8px}
+    .brand-title{
+      display:flex;flex-direction:column;
+    }
+    .brand-title .domain{font-weight:700;color:var(--accent-1);font-size:18px}
+    .brand-title .sub{font-size:12px;color:var(--muted)}
 
-        .guest-badge {
-            background: linear-gradient(135deg, #d4a574 0%, #b8915f 100%);
-            padding: 10px 20px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            cursor: pointer;
-        }
+    .user-badge{
+      display:flex;align-items:center;gap:10px;background:linear-gradient(135deg,var(--accent-1),#b8915f);color:#2d2416;padding:8px 12px;border-radius:10px;cursor:pointer;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+    }
+    .user-badge img{width:36px;height:36px;border-radius:4px;object-fit:cover}
 
-        .player-head {
-            width: 40px;
-            height: 40px;
-            border-radius: 5px;
-        }
+    /* Layout */
+    .container{
+      width:100%;
+      max-width:1400px;
+      margin:26px auto;
+      display:flex;
+      gap:26px;
+      padding:0 20px;
+      align-items:flex-start;
+      flex:1;
+    }
 
-        .guest-name {
-            font-weight: bold;
-            color: #2d2416;
-        }
+    /* Sidebar */
+    aside.sidebar{
+      width:300px;
+      background: linear-gradient(180deg, rgba(0,0,0,0.18), rgba(0,0,0,0.12));
+      border: 1px solid rgba(212,165,116,0.08);
+      padding:22px;
+      border-radius:12px;
+      min-height:420px;
+    }
+    .sidebar .logo{
+      display:block;margin:0 auto 18px auto;max-width:220px;width:100%;height:auto;
+    }
+    .nav-title{color:var(--accent-1);text-align:center;font-weight:700;margin-bottom:12px}
+    .nav-btn{
+      display:flex;align-items:center;gap:12px;padding:12px;border-radius:8px;margin-bottom:10px;color:var(--accent-1);background:transparent;border:1px solid transparent;cursor:pointer;width:100%;
+    }
+    .nav-btn:hover{background:rgba(212,165,116,0.05)}
+    .nav-btn.active{background:linear-gradient(90deg, rgba(212,165,116,0.12), rgba(212,165,116,0.05));border-color:rgba(212,165,116,0.18)}
+    .nav-btn span.emoji{font-size:18px;width:28px;text-align:center}
 
-        .click-login {
-            font-size: 12px;
-            color: #3d3020;
-        }
+    /* Main content */
+    main.content{
+      flex:1;
+      min-height:420px;
+    }
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border:1px solid rgba(212,165,116,0.08);
+      padding:20px;
+      border-radius:12px;
+      margin-bottom:18px;
+    }
 
-        .server-status {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
+    .hero{
+      display:flex;align-items:center;justify-content:space-between;gap:16px;padding:20px;border-radius:12px;
+      background: linear-gradient(90deg, rgba(212,165,116,0.06), rgba(212,165,116,0.02));
+    }
+    .hero-left h1{font-size:22px;color:var(--accent-1);margin-bottom:6px}
+    .hero-left p{color:var(--muted);font-size:13px}
+    .hero-actions{display:flex;gap:12px;align-items:center}
+    .cta{
+      background: linear-gradient(90deg,var(--accent-2),var(--accent-1));
+      color:#2d2416;padding:12px 16px;border-radius:10px;font-weight:700;border:none;cursor:pointer;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+    }
+    .status-pill{background:rgba(0,0,0,0.4);color:var(--muted);padding:8px 10px;border-radius:999px;font-size:13px}
 
-        .play-button {
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(135deg, #f4c33f 0%, #d4a524 100%);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            color: #2d2416;
-        }
+    /* Grid for products */
+    .products-grid{
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px,1fr));
+      gap:18px;
+      margin-top:14px;
+    }
 
-        .server-domain {
-            font-size: 18px;
-            font-weight: bold;
-            color: #d4a574;
-        }
+    .product{
+      background:linear-gradient(180deg, rgba(0,0,0,0.12), rgba(0,0,0,0.08));
+      border:1px solid rgba(212,165,116,0.06);
+      padding:16px;border-radius:12px;position:relative;overflow:hidden;
+      display:flex;flex-direction:column;
+      min-height:240px;
+    }
+    .product .head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+    .product .title{font-weight:800;color:var(--accent-1);font-size:16px}
+    .product .price{font-weight:900;color:var(--accent-2);font-size:20px}
+    .product .badge{position:absolute;top:12px;right:12px;background:rgba(255,107,107,0.95);padding:6px 10px;border-radius:999px;font-weight:700;font-size:12px;color:#fff}
+    .benefits{list-style:none;margin-top:6px;flex:1;padding-left:14px;color:var(--text)}
+    .benefits li{padding:6px 0;position:relative;padding-left:18px}
+    .benefits li::before{content:'●';position:absolute;left:0;color:var(--accent-1);font-size:10px;top:8px}
+    .buy-row{display:flex;gap:8px;align-items:center;margin-top:12px}
+    .buy-btn{
+      flex:1;padding:10px 12px;border-radius:8px;border:none;background:linear-gradient(90deg,var(--accent-1),var(--accent-2));color:#2d2416;font-weight:800;cursor:pointer;
+    }
+    .info-small{font-size:12px;color:var(--muted);padding:8px 10px;border-radius:8px;background:rgba(0,0,0,0.15)}
 
-        .players-online {
-            font-size: 12px;
-            color: #aaa;
-        }
+    /* Footer */
+    footer.site-footer{margin-top:auto;padding:18px 20px;background:linear-gradient(180deg,rgba(0,0,0,0.18),rgba(0,0,0,0.24));border-top:1px solid rgba(212,165,116,0.06)}
+    .footer-inner{width:100%;max-width:1400px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;color:var(--muted);font-size:13px}
 
-        .main-container {
-            display: flex;
-            max-width: 1600px;
-            margin: 0 auto;
-        }
+    /* Responsive */
+    @media (max-width:980px){
+      .container{flex-direction:column;padding-bottom:20px}
+      aside.sidebar{width:100%}
+      .hero{flex-direction:column;align-items:flex-start;gap:12px}
+    }
 
-        .sidebar {
-            width: 300px;
-            background: rgba(44, 24, 16, 0.9);
-            padding: 30px 20px;
-            border-right: 2px solid #d4a574;
-            min-height: calc(100vh - 80px);
-        }
-
-        .main-logo {
-            max-width: 250px;
-            width: 100%;
-            display: block;
-            margin: 0 auto 30px;
-        }
-
-        .sidebar-title {
-            color: #d4a574;
-            font-size: 16px;
-            font-weight: bold;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .sidebar-btn {
-            background: rgba(212, 165, 116, 0.1);
-            border: 2px solid transparent;
-            padding: 15px 20px;
-            border-radius: 10px;
-            color: #d4a574;
-            font-size: 16px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 10px;
-            width: 100%;
-            transition: all 0.3s;
-        }
-
-        .sidebar-btn:hover {
-            background: rgba(212, 165, 116, 0.2);
-            border-color: #d4a574;
-        }
-
-        .sidebar-btn.active {
-            background: rgba(212, 165, 116, 0.3);
-            border-color: #d4a574;
-        }
-
-        .content-area {
-            flex: 1;
-            padding: 40px;
-        }
-
-        .page {
-            display: none;
-        }
-
-        .page.active {
-            display: block;
-        }
-
-        .page-header {
-            background: linear-gradient(135deg, #f4c33f 0%, #d4a524 100%);
-            padding: 20px 30px;
-            border-radius: 12px;
-            margin-bottom: 30px;
-        }
-
-        .page-header h2 {
-            color: #2d2416;
-            font-size: 24px;
-            margin-bottom: 8px;
-        }
-
-        .page-header p {
-            color: #3d3020;
-            font-size: 14px;
-        }
-
-        .products-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 25px;
-        }
-
-        .product-card {
-            background: rgba(212, 165, 116, 0.15);
-            border: 2px solid #d4a574;
-            border-radius: 12px;
-            padding: 25px;
-            position: relative;
-        }
-
-        .product-icon {
-            font-size: 80px;
-            text-align: center;
-            margin: 20px 0;
-        }
-
-        .product-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #d4a574;
-        }
-
-        .product-name {
-            font-size: 24px;
-            font-weight: bold;
-            color: #d4a574;
-        }
-
-        .product-price {
-            font-size: 28px;
-            font-weight: bold;
-            color: #f4c594;
-        }
-
-        .product-benefits {
-            list-style: none;
-            margin: 20px 0;
-        }
-
-        .product-benefits li {
-            padding: 8px 0;
-            padding-left: 25px;
-            position: relative;
-            color: #ddd;
-        }
-
-        .product-benefits li::before {
-            content: '✓';
-            position: absolute;
-            left: 0;
-            color: #d4a574;
-        }
-
-        .buy-btn {
-            width: 100%;
-            padding: 15px;
-            background: linear-gradient(135deg, #d4a574 0%, #8b6f47 100%);
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .op-badge {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
-            color: #fff;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 12px;
-            z-index: 10;
-        }
-
-        .welcome-section, .info-box {
-            background: rgba(212, 165, 116, 0.1);
-            border: 2px solid #d4a574;
-            border-radius: 12px;
-            padding: 30px;
-            margin-bottom: 30px;
-        }
-
-        .info-box h3 {
-            color: #d4a574;
-            margin-bottom: 15px;
-        }
-
-        footer {
-            background: rgba(0, 0, 0, 0.6);
-            padding: 30px;
-            text-align: center;
-            border-top: 2px solid #d4a574;
-            color: #aaa;
-        }
-
-        @media (max-width: 1024px) {
-            .main-container {
-                flex-direction: column;
-            }
-            .sidebar {
-                width: 100%;
-            }
-        }
-    </style>
+  </style>
 </head>
 <body>
-    <div class="top-bar">
-        <div class="top-bar-content">
-            <div class="player-info">
-                <div class="guest-badge" onclick="alert('Login feature - enter username')">
-                    <img src="https://crafatar.com/avatars/8667ba71b85a4004af54457a9734eed7" alt="Guest" class="player-head">
-                    <div>
-                        <div class="guest-name">Guest's Bag</div>
-                        <div class="click-login">click to login</div>
-                    </div>
-                </div>
-            </div>
-            <div class="server-status">
-                <div class="play-button">▶</div>
-                <div>
-                    <div class="server-domain">vanillasmp.org</div>
-                    <div class="players-online">Players Online</div>
-                </div>
-            </div>
+  <header class="topbar" role="banner">
+    <div class="topbar-inner">
+      <div class="brand-left">
+        <!-- Put your logo at ./logo.png -->
+        <img src="./logo.png" alt="VanillaSMP Logo" class="logo-small" />
+        <div class="brand-title">
+          <div class="domain">vanillasmp.org</div>
+          <div class="sub">Official Webstore</div>
         </div>
+      </div>
+
+      <div style="display:flex;gap:12px;align-items:center">
+        <div class="status-pill">Play: vanillasmp.org</div>
+        <div class="user-badge" onclick="alert('Login placeholder — connect your auth system here')">
+          <img src="https://crafatar.com/avatars/8667ba71b85a4004af54457a9734eed7" alt="guest" />
+          <div style="font-size:13px;font-weight:700">Guest's Bag <div style="font-size:11px;color:#3d3020">click to login</div></div>
+        </div>
+      </div>
     </div>
+  </header>
 
-    <div class="main-container">
-        <aside class="sidebar">
-            <img src="./logo.png" alt="VanillaSMP" class="main-logo">
-            <div class="sidebar-title">START SHOPPING</div>
-            <button class="sidebar-btn active" onclick="showPage('home')">
-                <span>🌍</span> Home
-            </button>
-            <button class="sidebar-btn" onclick="showPage('ranks')">
-                <span>👑</span> Ranks
-            </button>
-            <button class="sidebar-btn" onclick="showPage('keys')">
-                <span>🔑</span> Keys
-            </button>
-            <button class="sidebar-btn" onclick="showPage('upgrades')">
-                <span>📦</span> Upgrades
-            </button>
-            <button class="sidebar-btn" onclick="showPage('bundles')">
-                <span>🎁</span> Bundles
-            </button>
-            <button class="sidebar-btn" onclick="showPage('gems')">
-                <span>💎</span> Gems
-            </button>
-        </aside>
+  <div class="container" role="main">
+    <aside class="sidebar" aria-label="Shop navigation">
+      <img src="./logo.png" alt="VanillaSMP full logo" class="logo" />
+      <div class="nav-title">START SHOPPING</div>
 
-        <main class="content-area">
-            <div id="home" class="page active">
-                <div class="welcome-section">
-                    <h2>Welcome to the VanillaSMP Webstore!</h2>
-                    <p>Welcome to the official VanillaSMP Store. To begin shopping, please select a category to your left.</p>
-                </div>
-                <div class="info-box">
-                    <h3>SUPPORT</h3>
-                    <p>Need help? Email: vanillasmpmc@gmail.com</p>
-                </div>
-                <div class="info-box">
-                    <h3>REFUND POLICY</h3>
-                    <p>All payments are final and non-refundable.</p>
-                </div>
+      <button class="nav-btn active" data-target="home" onclick="navClick(this)">
+        <span class="emoji">🌍</span> Home
+      </button>
+      <button class="nav-btn" data-target="ranks" onclick="navClick(this)">
+        <span class="emoji">👑</span> Ranks
+      </button>
+      <button class="nav-btn" data-target="keys" onclick="navClick(this)">
+        <span class="emoji">🔑</span> Keys
+      </button>
+      <button class="nav-btn" data-target="upgrades" onclick="navClick(this)">
+        <span class="emoji">⬆️</span> Rank Upgrades
+      </button>
+      <button class="nav-btn" data-target="bundles" onclick="navClick(this)">
+        <span class="emoji">🎁</span> Bundles
+      </button>
+      <button class="nav-btn" data-target="gems" onclick="navClick(this)">
+        <span class="emoji">💎</span> Gems
+      </button>
+
+      <div style="height:12px"></div>
+
+      <div style="display:flex;gap:10px;flex-direction:column">
+        <a class="nav-btn" style="justify-content:center" href="https://discord.gg" target="_blank" rel="noopener">Join Discord</a>
+        <a class="nav-btn" style="justify-content:center" href="mailto:vanillasmpmc@gmail.com">Support</a>
+      </div>
+    </aside>
+
+    <main class="content" id="pages">
+      <!-- HOME -->
+      <section id="home" class="card page active">
+        <div class="hero">
+          <div class="hero-left">
+            <h1>Welcome to the VanillaSMP Webstore!</h1>
+            <p>Official store for VanillaSMP — buy ranks, keys, bundles and gems. All purchases redirect to PayPal for secure checkout.</p>
+          </div>
+          <div class="hero-actions">
+            <div class="status-pill">Players Online: —</div>
+            <button class="cta" onclick="window.open('https://vanillasmp.org','_blank')">Visit Server</button>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:18px;margin-top:18px;flex-wrap:wrap">
+          <div class="card" style="flex:1;min-width:260px">
+            <h3 style="color:var(--accent-1);margin-bottom:8px">Support</h3>
+            <p style="color:var(--muted)">Need questions answered before checkout? Contact the community/staff on Discord or email <strong>vanillasmpmc@gmail.com</strong>.</p>
+          </div>
+          <div class="card" style="flex:1;min-width:260px">
+            <h3 style="color:var(--accent-1);margin-bottom:8px">Refund Policy</h3>
+            <p style="color:var(--muted)">All payments are final and non-refundable. Purchases are delivered in-game. If delivery fails, contact support with proof of purchase.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- RANKS -->
+      <section id="ranks" class="card page" style="display:none">
+        <header style="display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <h2 style="color:var(--accent-1)">👑 Ranks</h2>
+            <p style="color:var(--muted)">Buy ranks for VanillaSMP. Ranks are one-time purchases and are permanent unless otherwise stated.</p>
+          </div>
+        </header>
+
+        <div class="products-grid" aria-live="polite" style="margin-top:14px">
+          <!-- Core $4.00 -->
+          <article class="product" aria-labelledby="core-title">
+            <div class="head">
+              <div id="core-title" class="title">Core</div>
+              <div class="price">$4.00</div>
             </div>
-
-            <div id="ranks" class="page">
-                <div class="page-header">
-                    <h2>👑 Ranks</h2>
-                    <p>Here You can buy ranks for the VanillaSMP Server!</p>
-                </div>
-                <div class="products-grid">
-                    <div class="product-card">
-                        <div class="product-icon">⚔️</div>
-                        <div class="product-header">
-                            <div class="product-name">Core</div>
-                            <div class="product-price">$4.00</div>
-                        </div>
-                        <ul class="product-benefits">
-                            <li>/hat</li>
-                            <li>/craft</li>
-                            <li>/feed</li>
-                        </ul>
-                        <button class="buy-btn" onclick="buyProduct(4)">Purchase</button>
-                    </div>
-                    <div class="product-card">
-                        <div class="product-icon">🛡️</div>
-                        <div class="product-header">
-                            <div class="product-name">Pro</div>
-                            <div class="product-price">$8.00</div>
-                        </div>
-                        <ul class="product-benefits">
-                            <li>Everything in Core</li>
-                            <li>/anvil</li>
-                            <li>/heal</li>
-                        </ul>
-                        <button class="buy-btn" onclick="buyProduct(8)">Purchase</button>
-                    </div>
-                    <div class="product-card">
-                        <div class="op-badge">OP RANK</div>
-                        <div class="product-icon">👑</div>
-                        <div class="product-header">
-                            <div class="product-name">Vanilla</div>
-                            <div class="product-price">$20.00</div>
-                        </div>
-                        <ul class="product-benefits">
-                            <li>Full God Netherite</li>
-                            <li>/fly</li>
-                            <li>$5M monthly</li>
-                        </ul>
-                        <button class="buy-btn" onclick="buyProduct(20)">Purchase</button>
-                    </div>
-                </div>
+            <ul class="benefits">
+              <li>/hat</li>
+              <li>/craft</li>
+              <li>/feed</li>
+              <li>Colored chat</li>
+              <li>/sethome 2</li>
+              <li>1 Small Crate Key monthly</li>
+              <li>Iron Armor Set</li>
+            </ul>
+            <div class="buy-row">
+              <div class="info-small">Permanent rank</div>
+              <button class="buy-btn" onclick="buyProduct(4)">Purchase</button>
             </div>
+          </article>
 
-            <div id="keys" class="page">
-                <div class="page-header">
-                    <h2>🔑 Keys</h2>
-                    <p>Here You can buy keys for the VanillaSMP Server!</p>
-                </div>
-                <div class="products-grid">
-                    <div class="product-card">
-                        <div class="product-icon">🔑</div>
-                        <div class="product-header">
-                            <div class="product-name">Small Key</div>
-                            <div class="product-price">$1.50</div>
-                        </div>
-                        <button class="buy-btn" onclick="buyProduct(1.50)">Purchase</button>
-                    </div>
-                </div>
+          <!-- Pro $8.00 -->
+          <article class="product" aria-labelledby="pro-title">
+            <div class="head">
+              <div id="pro-title" class="title">Pro</div>
+              <div class="price">$8.00</div>
             </div>
+            <ul class="benefits">
+              <li>Everything in Core</li>
+              <li>/anvil</li>
+              <li>/enderchest</li>
+              <li>/heal (cooldown)</li>
+              <li>/sethome 4</li>
+              <li>1 Medium Crate Key monthly</li>
+              <li>Prot I Iron Armor</li>
+            </ul>
+            <div class="buy-row">
+              <div class="info-small">Permanent rank</div>
+              <button class="buy-btn" onclick="buyProduct(8)">Purchase</button>
+            </div>
+          </article>
 
-            <div id="upgrades" class="page">
-                <div class="page-header">
-                    <h2>📦 Rank Upgrades</h2>
-                    <p>Upgrade your rank!</p>
-                </div>
+          <!-- Master $15 -->
+          <article class="product" aria-labelledby="master-title">
+            <div class="badge">POPULAR</div>
+            <div class="head">
+              <div id="master-title" class="title">Master</div>
+              <div class="price">$15.00</div>
             </div>
+            <ul class="benefits">
+              <li>Everything in Pro</li>
+              <li>/repair</li>
+              <li>/nick</li>
+              <li>Fly in spawn</li>
+              <li>/sethome 6</li>
+              <li>2 Master Keys monthly</li>
+              <li>Prot II Iron + Diamond Tools</li>
+            </ul>
+            <div class="buy-row">
+              <div class="info-small">Permanent rank</div>
+              <button class="buy-btn" onclick="buyProduct(15)">Purchase</button>
+            </div>
+          </article>
 
-            <div id="bundles" class="page">
-                <div class="page-header">
-                    <h2>🎁 Bundles</h2>
-                    <p>Special bundle deals!</p>
-                </div>
+          <!-- Vanilla $20 (OP Rank) -->
+          <article class="product" aria-labelledby="vanilla-title">
+            <div class="badge">OP</div>
+            <div class="head">
+              <div id="vanilla-title" class="title">Vanilla — $20.00 (OP Rank)</div>
+              <div class="price">$20.00</div>
             </div>
+            <ul class="benefits">
+              <li>Everything in Master</li>
+              <li>FULL GOD NETHERITE ARMOR — Protection IV, Unbreaking III, Mending, Thorns III</li>
+              <li>FULL GOD NETHERITE TOOLS — Efficiency V, Unbreaking III, Mending, Fortune III + Silk Touch Pickaxe</li>
+              <li>God Bow (Power V, Punch II, Flame, Infinity)</li>
+              <li>/fly</li>
+              <li>/heal (60s cooldown)</li>
+              <li>/ec</li>
+              <li>/repair</li>
+              <li>/hat</li>
+              <li>/craft</li>
+              <li>/near</li>
+              <li>/nick</li>
+              <li>/sethome 15</li>
+              <li>Custom name color</li>
+              <li>5 Vanilla Keys monthly</li>
+              <li>$5,000,000 monthly</li>
+            </ul>
+            <div class="buy-row">
+              <div class="info-small">Permanent rank / Monthly perks</div>
+              <button class="buy-btn" onclick="buyProduct(20)">Purchase</button>
+            </div>
+          </article>
 
-            <div id="gems" class="page">
-                <div class="page-header">
-                    <h2>💎 Gems</h2>
-                    <p>Buy premium gems!</p>
-                </div>
+          <!-- Vanilla+ $30 -->
+          <article class="product" aria-labelledby="vanillaplus-title">
+            <div class="badge">INSANE</div>
+            <div class="head">
+              <div id="vanillaplus-title" class="title">Vanilla+ — $30.00 (INSANELY OP Rank)</div>
+              <div class="price">$30.00</div>
             </div>
-        </main>
+            <ul class="benefits">
+              <li>Everything in Vanilla</li>
+              <li>ULTRA-GOD NETHERITE ARMOR — Protection VIII, Unbreaking X, Thorns V, Mending</li>
+              <li>ULTRA-GOD TOOLS — Efficiency X, Sharpness X, Unbreaking X, Fortune V, Looting V</li>
+              <li>Ultra-God Bow (Power X, Punch V, Infinity)</li>
+              <li>/god</li>
+              <li>/fix all</li>
+              <li>/heal (no cooldown)</li>
+              <li>/flyspeed 5</li>
+              <li>/walkspeed 5</li>
+              <li>/backpack 27 slots</li>
+              <li>/rtp unlimited</li>
+              <li>/sethome unlimited</li>
+              <li>/disguise</li>
+              <li>/pv 1–6</li>
+              <li>Fly-in-combat bypass</li>
+              <li>10 Vanilla+ Keys monthly</li>
+              <li>$20,000,000 monthly</li>
+              <li>1 monthly Ultra-God Item</li>
+            </ul>
+            <div class="buy-row">
+              <div class="info-small">Permanent rank / Monthly perks</div>
+              <button class="buy-btn" onclick="buyProduct(30)">Purchase</button>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- KEYS -->
+      <section id="keys" class="card page" style="display:none">
+        <header>
+          <h2 style="color:var(--accent-1)">🔑 Keys</h2>
+          <p style="color:var(--muted)">Crate keys for random rewards.</p>
+        </header>
+
+        <div class="products-grid" style="margin-top:12px">
+          <article class="product">
+            <div class="head">
+              <div class="title">Small Key</div>
+              <div class="price">$1.50</div>
+            </div>
+            <ul class="benefits">
+              <li>Chance at iron gear, small rewards</li>
+              <li>Money reward: $100k–$500k</li>
+            </ul>
+            <div class="buy-row">
+              <div class="info-small">Single key</div>
+              <button class="buy-btn" onclick="buyProduct(1.5)">Purchase</button>
+            </div>
+          </article>
+
+          <article class="product">
+            <div class="head">
+              <div class="title">Medium Key</div>
+              <div class="price">$3.00</div>
+            </div>
+            <ul class="benefits">
+              <li>Good tools, spawners</li>
+              <li>Money reward: $250k–$2m</li>
+            </ul>
+            <div class="buy-row">
+              <div class="info-small">Single key</div>
+              <button class="buy-btn" onclick="buyProduct(3)">Purchase</button>
+            </div>
+          </article>
+
+          <article class="product">
+            <div class="head">
+              <div class="title">Master Key</div>
+              <div class="price">$5.00</div>
+            </div>
+            <ul class="benefits">
+              <li>Netherite items, rare enchants</li>
+              <li>Money reward: $1m–$5m</li>
+            </ul>
+            <div class="buy-row">
+              <div class="info-small">Single key</div>
+              <button class="buy-btn" onclick="buyProduct(5)">Purchase</button>
+            </div>
+          </article>
+
+          <article class="product">
+            <div class="head">
+              <div class="title">Vanilla Key</div>
+              <div class="price">$10.00</div>
+            </div>
+            <ul class="benefits">
+              <li>God gear, elytras, cosmetics</li>
+              <li>Money reward: $5m–$15m</li>
+            </ul>
+            <div class="buy-row">
+              <div class="info-small">Single key</div>
+              <button class="buy-btn" onclick="buyProduct(10)">Purchase</button>
+            </div>
+          </article>
+
+          <article class="product">
+            <div class="head">
+              <div class="title">Vanilla+ Key</div>
+              <div class="price">$15.00</div>
+            </div>
+            <ul class="benefits">
+              <li>Ultra-god gear, disguises, pets</li>
+              <li>Money reward: $10m–$50m</li>
+            </ul>
+            <div class="buy-row">
+              <div class="info-small">Single key</div>
+              <button class="buy-btn" onclick="buyProduct(15)">Purchase</button>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- UPGRADES -->
+      <section id="upgrades" class="card page" style="display:none">
+        <header>
+          <h2 style="color:var(--accent-1)">⬆️ Rank Upgrades</h2>
+          <p style="color:var(--muted)">Upgrade from your current rank to the next tier.</p>
+        </header>
+
+        <div class="products-grid" style="margin-top:12px">
+          <article class="product">
+            <div class="head">
+              <div class="title">Core → Pro</div>
+              <div class="price">$4.00</div>
+            </div>
+            <ul class="benefits">
+              <li>Upgrade Core to Pro</li>
+            </ul>
+            <div class="buy-row">
+              <div class="info-small">One-time upgrade</div>
+              <button class="buy-btn" onclick="buyProduct(4)">Purchase Upgrade</button>
+            </div>
+          </article>
+
+          <article class="product">
+            <div class="head">
+              <div class="title">Pro → Master</div>
+              <div class="price">$7.00</div>
+            </div>
+            <ul class="benefits">
+              <li>Upgrade Pro to Master</li>
+            </ul>
+            <div class="buy-row">
+              <div class="info-small">One-time upgrade</div>
+              <button class="buy-btn" onclick="buyProduct(7)">Purchase Upgrade</button>
+            </div>
+          </article>
+
+          <article class="product">
+            <div class="head">
+              <div class="title">Master → Vanilla</div>
+              <div class="price">$5.00</div>
+            </div>
+            <ul class="benefits">
+              <li>Upgrade Master to Vanilla</li>
+            </ul>
+            <div class="buy-row">
+              <div class="info-small">One-time upgrade</div>
+              <button class="buy-btn" onclick="buyProduct(5)">Purchase Upgrade</button>
+            </div>
+          </article>
+
+          <article class="product">
+            <div class="head">
+              <div class="title">Vanilla → Vanilla+</div>
+              <div class="price">$10.00</div>
+            </div>
+            <ul class="benefits">
+              <li>Upgrade Vanilla to Vanilla+</li>
+            </ul>
+            <div class="buy-row">
+              <div class="info-small">One-time upgrade</div>
+              <button class="buy-btn" onclick="buyProduct(10)">Purchase Upgrade</button>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- BUNDLES -->
+      <section id="bundles" class="card page" style="display:none">
+        <header>
+          <h2 style="color:var(--accent-1)">🎁 Bundles</h2>
+          <p style="color:var(--muted)">Pre-packaged bundles for value.</p>
+        </header>
+
+        <div class="products-grid" style="margin-top:12px">
+          <article class="product">
+            <div class="head">
+              <div class="title">Starter Bundle</div>
+              <div class="price">$10.00</div>
+            </div>
+            <ul class="benefits">
+              <li>3 Small Keys</li>
+              <li>1 Medium Key</li>
+              <li>$2,000,000 money</li>
+            </ul>
+            <div class="buy-row">
+              <div class="info-small">Good for new players</div>
+              <button class="buy-btn" onclick="buyProduct(10)">Purchase</button>
+            </div>
+          </article>
+
+          <article class="product">
+            <div class="head">
+              <div class="title">Vanilla Power Bundle</div>
+              <div class="price">$25.00</div>
+            </div>
+            <ul class="benefits">
+              <li>1 Vanilla Key</li>
+              <li>5 Small Keys</li>
+              <li>1 Master Key</li>
+              <li>$10,000,000 money</li>
+            </ul>
+            <div class="buy-row">
+              <div class="info-small">High value</div>
+              <button class="buy-btn" onclick="buyProduct(25)">Purchase</button>
+            </div>
+          </article>
+
+          <article class="product">
+            <div class="head">
+              <div class="title">Vanilla+ Extreme Bundle</div>
+              <div class="price">$40.00</div>
+            </div>
+            <ul class="benefits">
+              <li>2 Vanilla+ Keys</li>
+              <li>5 Medium Keys</li>
+              <li>15 Small Keys</li>
+              <li>$20,000,000 money</li>
+            </ul>
+            <div class="buy-row">
+              <div class="info-small">Top tier bundle</div>
+              <button class="buy-btn" onclick="buyProduct(40)">Purchase</button>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- GEMS -->
+      <section id="gems" class="card page" style="display:none">
+        <header>
+          <h2 style="color:var(--accent-1)">💎 Gems</h2>
+          <p style="color:var(--muted)">Gems are premium currency for pets, cosmetics, tags, effects and future shop items.</p>
+        </header>
+
+        <div class="products-grid" style="margin-top:12px">
+          <article class="product">
+            <div class="head">
+              <div class="title">500 Gems</div>
+              <div class="price">$5.00</div>
+            </div>
+            <ul class="benefits">
+              <li>500 Gems usable for cosmetics & pets</li>
+            </ul>
+            <div class="buy-row">
+              <div class="info-small">Instant credit in-game</div>
+              <button class="buy-btn" onclick="buyProduct(5)">Purchase</button>
+            </div>
+          </article>
+
+          <article class="product">
+            <div class="head">
+              <div class="title">1,200 Gems</div>
+              <div class="price">$10.00</div>
+            </div>
+            <ul class="benefits">
+              <li>1,200 Gems usable for cosmetics & pets</li>
+            </ul>
+            <div class="buy-row">
+              <div class="info-small">Best seller</div>
+              <button class="buy-btn" onclick="buyProduct(10)">Purchase</button>
+            </div>
+          </article>
+
+          <article class="product">
+            <div class="head">
+              <div class="title">2,600 Gems</div>
+              <div class="price">$20.00</div>
+            </div>
+            <ul class="benefits">
+              <li>2,600 Gems usable for cosmetics & pets</li>
+            </ul>
+            <div class="buy-row">
+              <div class="info-small">Great value</div>
+              <button class="buy-btn" onclick="buyProduct(20)">Purchase</button>
+            </div>
+          </article>
+
+          <article class="product">
+            <div class="head">
+              <div class="title">6,000 Gems</div>
+              <div class="price">$40.00</div>
+            </div>
+            <ul class="benefits">
+              <li>6,000 Gems usable for cosmetics & pets</li>
+            </ul>
+            <div class="buy-row">
+              <div class="info-small">Premium pack</div>
+              <button class="buy-btn" onclick="buyProduct(40)">Purchase</button>
+            </div>
+          </article>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <footer class="site-footer" role="contentinfo">
+    <div class="footer-inner">
+      <div>&copy; <span id="year"></span> VanillaSMP — vanillasmp.org</div>
+      <div style="color:var(--muted)">Powered by PayPal.me — payments handled externally</div>
     </div>
+  </footer>
 
-    <footer>
-        <p>&copy; 2025 VanillaSMP. All rights reserved.</p>
-        <p>vanillasmp.org</p>
-    </footer>
+  <script>
+    // Set current year
+    document.getElementById('year').textContent = new Date().getFullYear();
 
-    <script>
-        function showPage(pageId) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.querySelectorAll('.sidebar-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(pageId).classList.add('active');
-            event.target.classList.add('active');
-        }
+    // Navigation click handler
+    function navClick(el){
+      // toggle active class
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+      el.classList.add('active');
 
-        function buyProduct(price) {
-            window.open(`https://paypal.me/VanillaSMPMC/${price}`, '_blank');
-        }
-    </script>
+      const target = el.getAttribute('data-target');
+      document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+      const page = document.getElementById(target);
+      if(page) page.style.display = '';
+
+      // smooth scroll to top of content on mobile
+      if(window.innerWidth < 980) window.scrollTo({top: 0, behavior: 'smooth'});
+    }
+
+    // Buy function: opens PayPal.me link with amount
+    // Uses the PayPal.me username: VanillaSMPMC
+    function buyProduct(amount){
+      // Accept amounts as numbers (integers or floats)
+      // Normalize to 2 decimal places but remove trailing zeros for PayPal.me links:
+      const amt = Number(amount);
+      if(Number.isNaN(amt) || amt <= 0){
+        alert('Invalid price');
+        return;
+      }
+      // Format to trimmed decimal (PayPal accepts 4 or 4.5 or 4.00)
+      let formatted = amt.toFixed(2);
+      // Remove trailing .00 or .50 formatting simplification if desired
+      // But keep two decimals for clarity: use trimmed version (e.g., 1.50 -> 1.5, 4.00->4)
+      formatted = formatted.replace(/\.00$/, '');
+      formatted = formatted.replace(/\.?0$/, function(m){ return m; }); // noop: ensures consistency
+
+      // Compose PayPal.me URL
+      const url = `https://paypal.me/VanillaSMPMC/${encodeURIComponent(formatted)}`;
+      window.open(url, '_blank', 'noopener');
+    }
+
+    // Accessibility: keyboard nav
+    document.addEventListener('keydown', function(e){
+      if(e.key === '1') document.querySelector('[data-target="home"]').click();
+      if(e.key === '2') document.querySelector('[data-target="ranks"]').click();
+      if(e.key === '3') document.querySelector('[data-target="keys"]').click();
+    });
+  </script>
 </body>
 </html>
