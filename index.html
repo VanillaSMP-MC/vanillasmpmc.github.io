@@ -139,10 +139,34 @@
       display:flex;flex-direction:column;
       min-height:240px;
     }
-    .product .head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+    .product .head{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:10px;
+      /* FIX: Add padding to prevent price from colliding with the absolute badge */
+      padding-right: 50px; 
+    }
     .product .title{font-weight:800;color:var(--accent-1);font-size:16px}
-    .product .price{font-weight:900;color:var(--accent-2);font-size:20px}
-    .product .badge{position:absolute;top:12px;right:12px;background:rgba(255,107,107,0.95);padding:6px 10px;border-radius:999px;font-weight:700;font-size:12px;color:#fff}
+    .product .price{
+      font-weight:900;
+      color:var(--accent-2);
+      font-size:20px;
+      /* Ensure price is positioned normally within the flex head container */
+      position: static;
+    }
+    .product .badge{
+      /* Badge remains absolutely positioned in the top right */
+      position:absolute;
+      top:12px;
+      right:12px;
+      background:rgba(255,107,107,0.95);
+      padding:6px 10px;
+      border-radius:999px;
+      font-weight:700;
+      font-size:12px;
+      color:#fff
+    }
     .benefits{list-style:none;margin-top:6px;flex:1;padding-left:14px;color:var(--text)}
     .benefits li{padding:6px 0;position:relative;padding-left:18px}
     .benefits li::before{content:'●';position:absolute;left:0;color:var(--accent-1);font-size:10px;top:8px}
@@ -162,7 +186,6 @@
       aside.sidebar{width:100%}
       .hero{flex-direction:column;align-items:flex-start;gap:12px}
     }
-
   </style>
 </head>
 <body>
@@ -177,12 +200,13 @@
       </div>
 
       <div style="display:flex;gap:12px;align-items:center">
-        <div class="status-pill">Play: vanillasmp.org</div>
-        <div class="user-badge" onclick="alert('Login placeholder — connect your auth system here')">
-          <img src="https://crafatar.com/avatars/8667ba71b85a4004af54457a9734eed7" alt="guest" />
-          <div style="font-size:13px;font-weight:700">Guest's Bag <div style="font-size:11px;color:#3d3020">click to login</div></div>
+        <div class="status-pill">Players Online: —</div>
+        
+        <div id="user-badge" class="user-badge" onclick="promptForUsername()">
+            <img id="user-avatar-img" src="https://crafatar.com/avatars/8667ba71b85a4004af54457a9734eed7" alt="guest" />
+            <div id="user-avatar-text" style="font-size:13px;font-weight:700">Guest's Bag <div style="font-size:11px;color:#3d3020">click to enter username</div></div>
         </div>
-      </div>
+        </div>
     </div>
   </header>
 
@@ -316,7 +340,7 @@
           <article class="product" aria-labelledby="vanilla-title">
             <div class="badge">OP</div>
             <div class="head">
-              <div id="vanilla-title" class="title">Vanilla — $20.00 (OP Rank)</div>
+              <div id="vanilla-title" class="title">Vanilla</div> 
               <div class="price">$20.00</div>
             </div>
             <ul class="benefits">
@@ -346,7 +370,7 @@
           <article class="product" aria-labelledby="vanillaplus-title">
             <div class="badge">INSANE</div>
             <div class="head">
-              <div id="vanillaplus-title" class="title">Vanilla+ — $30.00 (INSANELY OP Rank)</div>
+              <div id="vanillaplus-title" class="title">Vanilla+</div>
               <div class="price">$30.00</div>
             </div>
             <ul class="benefits">
@@ -660,116 +684,166 @@
   </footer>
 
   <script>
+    // === JAVASCRIPT LOGIC ===
+
     // --- Configuration ---
+    // This is your Cloudflare Worker URL, which handles payment link generation and Discord notification.
     const WEBHOOK_URL = 'https://store-webhook-proxy.clipsofstreamers0-1.workers.dev/';
+    const USER_BADGE_ID = 'user-badge';
+    const AVATAR_IMG_ID = 'user-avatar-img';
+    const AVATAR_TEXT_ID = 'user-avatar-text';
 
     // Set current year
     document.getElementById('year').textContent = new Date().getFullYear();
 
-    // Navigation click handler
-    function navClick(el){
-      // toggle active class
-      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-      el.classList.add('active');
+    // --- Utility Functions for User Data and Avatar Display ---
 
-      const target = el.getAttribute('data-target');
-      document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
-      const page = document.getElementById(target);
-      if(page) page.style.display = '';
-
-      // smooth scroll to top of content on mobile
-      if(window.innerWidth < 980) window.scrollTo({top: 0, behavior: 'smooth'});
-    }
-    
-    // Attempt to retrieve and pre-fill the last used username
     function getLastUsername() {
         return localStorage.getItem('lastMinecraftUsername') || '';
     }
-    
+
     function setLastUsername(username) {
         localStorage.setItem('lastMinecraftUsername', username);
     }
-    
-    // Buy function: sends request to Cloudflare Worker to generate PayPal link
-    async function buyProduct(amount, product_name){
-      // 1. Get Minecraft Username
-      let username = prompt(`Please enter your Minecraft Username to purchase "${product_name}":`, getLastUsername());
 
-      if(!username) {
-        alert('Purchase cancelled. You must enter a Minecraft Username.');
-        return;
-      }
-      
-      // Basic validation (e.g., must be 3-16 characters)
-      username = username.trim();
-      if (username.length < 3 || username.length > 16 || !/^[a-zA-Z0-9_]+$/.test(username)) {
-        alert('Invalid Minecraft Username. Must be 3-16 characters long and contain only letters, numbers, and underscores.');
-        return;
-      }
-
-      // Store username for next time
-      setLastUsername(username);
-
-      // Normalize amount for the backend
-      const amt = Number(amount);
-      if(Number.isNaN(amt) || amt <= 0){
-        alert('Invalid price');
-        return;
-      }
-      const formatted_amount = amt.toFixed(2); // Always two decimal places for the API
-
-      // 2. Prepare and Send Request to Cloudflare Worker
-      const purchaseDetails = {
-        amount: formatted_amount,
-        product_name: product_name,
-        username: username,
-      };
-
-      console.log('Sending purchase request:', purchaseDetails);
-      
-      try {
-        const response = await fetch(WEBHOOK_URL, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            // IMPORTANT: Add a unique header or secret if your Cloudflare Worker requires it for security
-            // 'X-Webstore-Secret': 'YOUR_SECRET_KEY' 
-          },
-          body: JSON.stringify(purchaseDetails),
-        });
-
-        if (!response.ok) {
-          const errorText = await response.text();
-          console.error('Webhook error response:', errorText);
-          alert(`Could not complete purchase. Server error: ${response.status} - ${errorText.substring(0, 100)}...`);
-          return;
-        }
-
-        const data = await response.json();
-        
-        if (data.status === 'success' && data.paypal_url) {
-          // 3. Open the generated PayPal URL for checkout
-          window.open(data.paypal_url, '_blank', 'noopener');
-        } else {
-          console.error('Invalid response from webhook:', data);
-          alert('Could not process payment link. Invalid response from the server.');
-        }
-
-      } catch (error) {
-        console.error('Fetch error:', error);
-        alert('A connection error occurred. Please try again or contact support.');
-      }
+    // Function to get the avatar URL from Crafatar
+    function getAvatarUrl(username) {
+        return `https://crafatar.com/avatars/${username}?size=36&overlay`;
     }
+
+    // Function to update the display badge with the user's details
+    function updateBadge(username) {
+        const badge = document.getElementById(USER_BADGE_ID);
+        const img = document.getElementById(AVATAR_IMG_ID);
+        const text = document.getElementById(AVATAR_TEXT_ID);
+
+        if (username && username.length >= 3) {
+            // Update Image Source
+            img.src = getAvatarUrl(username);
+            img.alt = `${username}'s Avatar`;
+
+            // Update Text
+            text.innerHTML = `${username}'s Bag <div style="font-size:11px;color:#3d3020">click to change</div>`;
+            
+            badge.onclick = promptForUsername;
+
+        } else {
+            // Reset to default guest state
+            img.src = "https://crafatar.com/avatars/8667ba71b85a4004af54457a9734eed7"; // Default Steve/Alex image
+            img.alt = "Guest Avatar";
+            text.innerHTML = `Guest's Bag <div style="font-size:11px;color:#3d3020">click to enter username</div>`;
+        }
+    }
+
+    // Function to prompt the user for their username
+    function promptForUsername() {
+        let username = prompt(`Please enter your Minecraft Username:`, getLastUsername());
+
+        if (!username) {
+            return false;
+        }
+
+        username = username.trim();
+
+        // Basic Minecraft username validation
+        if (username.length < 3 || username.length > 16 || !/^[a-zA-Z0-9_]+$/.test(username)) {
+            alert('Invalid Minecraft Username. Must be 3-16 characters long and contain only letters, numbers, and underscores.');
+            return false;
+        }
+
+        setLastUsername(username);
+        updateBadge(username);
+        return true; // Indicates success
+    }
+
+    // --- Main Checkout Function ---
+
+    async function buyProduct(amount, product_name){
+        let username = getLastUsername();
+
+        // If no username is set, force the prompt.
+        if (!username || username.length < 3) {
+            if (!promptForUsername()) {
+                alert('Purchase cancelled. You must enter a Minecraft Username.');
+                return;
+            }
+            username = getLastUsername(); // Re-fetch the newly set username
+        }
+
+        // Now we have a validated username: proceed with purchase logic
+        
+        const amt = Number(amount);
+        if(Number.isNaN(amt) || amt <= 0){
+            alert('Invalid price');
+            return;
+        }
+        const formatted_amount = amt.toFixed(2); 
+
+        // Prepare and Send POST Request to Cloudflare Worker
+        const purchaseDetails = {
+            amount: formatted_amount,
+            product_name: product_name,
+            username: username,
+        };
+
+        try {
+            const response = await fetch(WEBHOOK_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(purchaseDetails),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({ message: 'Unknown server error' }));
+                alert(`Could not complete purchase. Server error: ${errorData.message}`);
+                return;
+            }
+
+            const data = await response.json();
+            
+            if (data.status === 'success' && data.paypal_url) {
+                // Open the generated PayPal URL for checkout
+                window.open(data.paypal_url, '_blank', 'noopener');
+            } else {
+                alert('Could not process payment link. Invalid response from the server.');
+            }
+
+        } catch (error) {
+            console.error('Fetch error:', error);
+            alert('A connection error occurred. Please try again or contact support.');
+        }
+    }
+
+    // --- Initial Setup and Navigation ---
+
+    // Navigation click handler
+    function navClick(el){
+        // toggle active class
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        el.classList.add('active');
+
+        const target = el.getAttribute('data-target');
+        document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+        const page = document.getElementById(target);
+        if(page) page.style.display = '';
+
+        // smooth scroll to top of content on mobile
+        if(window.innerWidth < 980) window.scrollTo({top: 0, behavior: 'smooth'});
+    }
+
+    // Initializer: Check for saved username on page load
+    document.addEventListener('DOMContentLoaded', () => {
+        updateBadge(getLastUsername());
+    });
 
     // Accessibility: keyboard nav
     document.addEventListener('keydown', function(e){
-      if(e.key === '1') document.querySelector('[data-target="home"]').click();
-      if(e.key === '2') document.querySelector('[data-target="ranks"]').click();
-      if(e.key === '3') document.querySelector('[data-target="keys"]').click();
+        if(e.key === '1') document.querySelector('[data-target="home"]').click();
+        if(e.key === '2') document.querySelector('[data-target="ranks"]').click();
+        if(e.key === '3') document.querySelector('[data-target="keys"]').click();
     });
-
-    // The 'addToCart' function from your original script is now redundant as we directly initiate checkout.
-    // I've removed it for simplicity, but you can re-add cart logic if needed.
 
   </script>
 </body>
