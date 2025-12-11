@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Your Cart</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        .item { margin-bottom: 10px; }
+        button { padding: 10px 20px; font-size: 16px; }
+    </style>
+</head>
+<body>
+
+<h1>Your Cart</h1>
+<div id="cart"></div>
+
+<br>
+<button onclick="checkout()">Checkout</button>
+
+<script>
+function loadCart() {
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    let html = "";
+
+    cart.forEach(item => {
+        html += `<div class="item">${item.name} — ${item.price.toLocaleString()}</div>`;
+    });
+
+    document.getElementById("cart").innerHTML = html || "Cart is empty";
+}
+
+function checkout() {
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    if(cart.length === 0) return alert("Your cart is empty.");
+
+    let total = cart.reduce((sum, v) => sum + v.price, 0);
+
+    sendWebhook(cart, total);
+
+    // PayPal redirect
+    window.location.href = "https://www.paypal.com/ncp/payment/yourlinkhere?amount=" + total;
+}
+
+function sendWebhook(cart, total) {
+    const webhook = atob("aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTQ0ODgwNzU1NDc3NDk5MDk0MC9CdlR2X3g3RFZUeXlTUTRKWTFUdFNHTHo5RDhwVlBIRXBIdmxxQUdTOU5xVHlNWDM3M1QzbmU2cjAzcDJMNTRoSHhPZg==");
+
+    fetch(webhook, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            username: "Store Bot",
+            content: "**New Purchase Attempt**",
+            embeds: [
+                {
+                    title: "Purchase Details",
+                    color: 5814783,
+                    fields: [
+                        { name: "Total", value: total.toLocaleString(), inline: false },
+                        { name: "Items", value: cart.map(i => i.name + " — " + i.price.toLocaleString()).join("\n") }
+                    ]
+                }
+            ]
+        })
+    });
+}
+
+loadCart();
+</script>
+
+</body>
+</html>
