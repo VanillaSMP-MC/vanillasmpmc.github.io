@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>VanillaSMP Store</title>
   <meta name="description" content="Official VanillaSMP Webstore" />
+  <link rel="icon" type="image/jpeg" href="https://p1.hiclipart.com/preview/896/990/447/minecraft-hd-icon-mac-pc-minecraft-icon-512-png-icon.jpg"> 
   <style>
     /* Basic reset */
     *{box-sizing:border-box;margin:0;padding:0}
@@ -121,13 +122,8 @@
     .discord-btn:hover {
       background-color: #5c6fb5; /* Slightly darker on hover */
     }
-
-    .discord-btn svg {
-      width: 20px;
-      height: 20px;
-      color: white; /* Make the SVG white */
-      margin-right: 4px; /* Space between logo and text */
-    }
+    
+    /* Removed .discord-btn svg styling as the logo was removed in the previous step */
 
     /* Main content */
     main.content{
@@ -237,11 +233,10 @@
         <div id="user-badge" class="user-badge" onclick="promptForUsername()">
             <img 
                 id="user-avatar-img" 
-                src="https://minotar.net/avatar/8667ba71b85a4004af54457a9734eed7/36.png" 
+                src="" 
                 alt="guest"
-                onerror="this.onerror=null; this.src='https://minotar.net/avatar/8667ba71b85a4004af54457a9734eed7/36.png';"
             />
-            <div id="user-avatar-text" style="font-size:13px;font-weight:700">Guest's Bag <div style="font-size:11px;color:#3d3020">click to enter username</div></div>
+            <div id="user-avatar-text" style="font-size:13px;font-weight:700">Guest <div style="font-size:11px;color:#3d3020">click to log in</div></div>
         </div>
         </div>
     </div>
@@ -275,12 +270,12 @@
 
       <div style="display:flex;gap:10px;flex-direction:column">
         
-       <a class="discord-btn" 
-   href="https://discord.gg/NKqgjdCpTP" 
-   target="_blank" 
-   rel="noopener">
-    <span>Join Discord</span>
-</a>
+        <a class="discord-btn" 
+           href="https://discord.gg/NKqgjdCpTP" 
+           target="_blank" 
+           rel="noopener">
+            <span>Join Discord</span>
+        </a>
         <a class="nav-btn" style="justify-content:center" href="mailto:vanillasmpmc@gmail.com">Support</a>
       </div>
     </aside>
@@ -749,10 +744,19 @@
         localStorage.setItem('lastMinecraftUsername', username);
     }
 
+    // Fallback URL using the default Steve/Alex UUID for Minotar
+    const FALLBACK_URL = "https://minotar.net/avatar/8667ba71b85a4004af54457a9734eed7/36.png"; 
+
     // Function to get the avatar URL using the reliable Minotar API
-    function getAvatarUrl(username) {
+    function getMinotarUrl(username) {
         // Minotar format: /avatar/{username}/{size}.png
         return `https://minotar.net/avatar/${username}/36.png`;
+    }
+
+    // Function to get the avatar URL using Crafatar as a second fallback
+    function getCrafatarUrl(username) {
+        // Crafatar format: /avatars/{username}?size={size}&default=MHF_Steve
+        return `https://crafatar.com/avatars/${username}?size=36&default=MHF_Steve`;
     }
 
     // Function to update the display badge with the user's details
@@ -760,23 +764,31 @@
         const badge = document.getElementById(USER_BADGE_ID);
         const img = document.getElementById(AVATAR_IMG_ID);
         const text = document.getElementById(AVATAR_TEXT_ID);
-        // Fallback URL using the default Steve/Alex UUID for Minotar
-        const FALLBACK_URL = "https://minotar.net/avatar/8667ba71b85a4004af54457a9734eed7/36.png"; 
+        let attemptCount = 0;
+
+        function attemptLoad(url) {
+            img.src = url;
+            img.onerror = function() {
+                this.onerror = null; // Clear the current handler
+                attemptCount++;
+                
+                if (attemptCount === 1) {
+                    // Minotar failed, try Crafatar
+                    attemptLoad(getCrafatarUrl(username));
+                } else {
+                    // Crafatar failed or Minotar failed twice, use final fallback
+                    this.src = FALLBACK_URL;
+                }
+            };
+        }
 
         if (username && username.length >= 3) {
-            // 1. Update Image Source
-            img.src = getAvatarUrl(username);
+            // 1. Update Image Source (starts the loading attempts)
             img.alt = `${username}'s Avatar`;
+            attemptLoad(getMinotarUrl(username));
 
-            // 2. Set Error Handler for dynamic loading
-            // If the unique head fails to load (e.g., Minotar is down or user is invalid), show the generic default head
-            img.onerror = function() {
-                this.onerror = null; // Prevent infinite loop
-                this.src = FALLBACK_URL;
-            };
-
-            // 3. Update Text
-            text.innerHTML = `${username}'s Bag <div style="font-size:11px;color:#3d3020">click to change</div>`;
+            // 2. Update Text to "Logged in as"
+            text.innerHTML = `Logged in as: <br><strong style="font-size:14px">${username}</strong>`;
             
             badge.onclick = promptForUsername;
 
@@ -785,7 +797,7 @@
             img.src = FALLBACK_URL;
             img.alt = "Guest Avatar";
             img.onerror = null; // Clear handler
-            text.innerHTML = `Guest's Bag <div style="font-size:11px;color:#3d3020">click to enter username</div>`;
+            text.innerHTML = `Guest <div style="font-size:11px;color:#3d3020">click to log in</div>`;
         }
     }
 
@@ -889,6 +901,7 @@
 
     // Initializer: Check for saved username on page load
     document.addEventListener('DOMContentLoaded', () => {
+        // Initialize the badge with a default or saved username
         updateBadge(getLastUsername());
     });
 
